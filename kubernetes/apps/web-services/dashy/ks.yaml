@@ -28,5 +28,5 @@ spec:
   #     VOLSYNC_CAPACITY: 1Gi
   prune: true
   wait: false
-  interval: 30m
+  interval: 2m
   timeout: 5m
