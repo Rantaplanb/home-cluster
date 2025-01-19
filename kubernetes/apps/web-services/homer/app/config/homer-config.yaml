@@ -1,0 +1,169 @@
+title: "Dashboard"
+#subtitle: ""
+#logo: ""
+
+header: true
+footer: false
+
+columns: "auto"
+connectivityCheck: true
+
+theme: default
+# colors from Nord theme: https://github.com/arcticicestudio/nord
+colors:
+  light:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#f5f5f5"
+    card-background: "#ffffff"
+    text: "#363636"
+    text-header: "#ffffff"
+    text-title: "#303030"
+    text-subtitle: "#424242"
+    card-shadow: rgba(0, 0, 0, 0.1)
+    link-hover: "#363636"
+  dark:
+    highlight-primary: "#2E3440"
+    highlight-secondary: "#4C566A"
+    highlight-hover: "#81A1C1"
+    background: "#3B4252"
+    card-background: "#2E3440"
+    text: "#D8DEE9"
+    text-header: "#D8DEE9"
+    text-title: "#81A1C1"
+    text-subtitle: "#81A1C1"
+    card-shadow: rgba(0, 0, 0, 0.4)
+    link-hover: "#BF616A"
+
+# Optional navbar
+links: []
+
+services:
+#### External Links ####
+  - name: "External Links"
+    icon: "fas fa-external-link-alt"
+    items:
+      - name: "echo-server"
+        logo: "https://cdn4.iconfinder.com/data/icons/database-32/24/cdn-server-database-512.png"
+        url: "https://echo-server.${SECRET_DOMAIN}"
+      - name: "Cosmote"
+        logo: "https://www.liblogo.com/img-logo/co5862c3e9-cosmote-logo-cosmote-contactcenterworld-com.png"
+        url: "https://192.168.1.1"
+
+#### Cloud ####
+  - name: "Cloud"
+    icon: "fas fa-cloud"
+    items:
+      - name: "Calibre"
+        logo: "https://cpp-prod-seek-company-image-uploads.s3.ap-southeast-2.amazonaws.com/432883/logo/63a2f0e0-bcca-11ea-86d1-e52bae5cc086.jpeg"
+        url: "https://calibre-web.mbastakis.com"
+      # - name: "Fastmail"
+      #   logo: "https://avatars.githubusercontent.com/u/4554886"
+      #   url: "https://app.fastmail.com/"
+#       - name: "SFTPGo"
+#         logo: "https://raw.githubusercontent.com/drakkan/sftpgo/main/img/logo.png"
+#         url: "https://sftpgo.${SECRET_DOMAIN}"
+#       - name: "Immich"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/immich.png"
+#         url: "https://immich.${SECRET_DOMAIN}"
+#       - name: "Paperless"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/paperless-ng.png"
+#         url: "https://paperless.${SECRET_DOMAIN}"
+#       - name: "Memos"
+#         logo: "https://raw.githubusercontent.com/usememos/memos/main/web/public/logo.webp"
+#         url: "https://memos.${SECRET_DOMAIN}"
+#       - name: "Tandoor Recipes"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/tandoorrecipes.png"
+#         url: "https://recipes.${SECRET_DOMAIN}"
+#       - name: "Linkwarden"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/linkwarden.png"
+#         url: "https://linkwarden.${SECRET_DOMAIN}"
+#       - name: "Syncthing"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/syncthing.png"
+#         url: "https://syncthing.${SECRET_DOMAIN}"
+#       - name: "Jellyfin"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/jellyfin.png"
+#         url: "https://jellyfin.${SECRET_DOMAIN}"
+
+
+# #### Cloud ####
+#   - name: "Cloud"
+#     icon: "fas fa-cloud"
+#     items:
+#       - name: "Jellyseerr"
+#         logo: "https://raw.githubusercontent.com/Fallenbagel/jellyseerr/refs/heads/develop/public/os_logo_square.png"
+#         url: "https://jellyseerr.${SECRET_DOMAIN}"
+#       - name: "Radarr"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/radarr.png"
+#         url: "https://radarr.${SECRET_DOMAIN}"
+#       - name: "Sonarr"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/sonarr.png"
+#         url: "https://sonarr.${SECRET_DOMAIN}"
+#       - name: "Bazarr"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/bazarr.png"
+#         url: "https://bazarr.${SECRET_DOMAIN}"
+#       - name: "qBittorrent"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/qbittorrent.png"
+#         url: "https://qb.${SECRET_DOMAIN}"
+#       - name: "JDownloader2"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/jdownloader.png"
+#         url: "https://jd2.${SECRET_DOMAIN}"
+#       - name: "Syncthing"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/syncthing.png"
+#         url: "https://syncthing.nas.${SECRET_DOMAIN}"
+#         subtitle: "Synology NAS"
+#       - name: "Plex"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/plex.png"
+#         url: "https://plex.nas.${SECRET_DOMAIN}"
+#         subtitle: "Synology NAS"
+#       # - name: "Jellyfin"
+#       #   logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/jellyfin.png"
+#       #   url: "https://jellyfin.nas.${SECRET_DOMAIN}"
+#       #   subtitle: "Synology NAS"
+
+# #### Management ####
+#   - name: "Management"
+#     icon: "fas fa-door-open"
+#     items:
+#       - name: "Proxmox"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/proxmox.png"
+#         url: "https://proxmox.${SECRET_DOMAIN}"
+#       - name: "Synology"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/synology.png"
+#         url: "https://nas.${SECRET_DOMAIN}"
+#       - name: "OPNsense"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/opnsense.png"
+#         url: "https://opnsense.${SECRET_DOMAIN}/"
+#       - name: "Rancher"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/rancher.png"
+#         url: "https://rancher.${SECRET_DOMAIN}/"
+#       - name: "Longhorn"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/longhorn.png"
+#         url: "https://longhorn.${SECRET_DOMAIN}/"
+#       - name: "Radicale"
+#         logo: "https://radicale.org/assets/logo.svg"
+#         url: "https://radicale.${SECRET_DOMAIN}"
+#       - name: "Prowlarr"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/prowlarr.png"
+#         url: "https://prowlarr.${SECRET_DOMAIN}"
+
+# #### Monitoring ####
+#   - name: "Monitoring"
+#     icon: "fas fa-desktop"
+#     items:
+#       - name: "Weave GitOps"
+#         logo: "https://avatars.githubusercontent.com/u/9976052?s=280&v=4"
+#         url: "https://gitops.${SECRET_DOMAIN}/"
+#       - name: "Grafana"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/grafana.png"
+#         url: "https://grafana.${SECRET_DOMAIN}/"
+#       - name: "Prometheus"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/prometheus.png"
+#         url: "https://prometheus.${SECRET_DOMAIN}/"
+#       - name: "Alertmanager"
+#         logo: "https://raw.githubusercontent.com/NX211/homer-icons/master/png/alertmanager.png"
+#         url: "https://alert-manager.${SECRET_DOMAIN}/"
+#       - name: "Goldilocks"
+#         logo: "https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/pkg/dashboard/assets/images/favicon-32x32.png"
+#         url: "https://goldilocks.${SECRET_DOMAIN}/"
