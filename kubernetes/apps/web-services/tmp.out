@@ -1,0 +1,17 @@
+NAMESPACE     	NAME                    	REVISION	SUSPENDED	READY	MESSAGE                                                                                                                 
+cert-manager  	cert-manager            	v1.16.3 	False    	True 	Helm install succeeded for release cert-manager/cert-manager.v1 with chart cert-manager@v1.16.3                        	
+flux-system   	flux-instance           	0.13.0  	False    	True 	Helm upgrade succeeded for release flux-system/flux-instance.v2 with chart flux-instance@0.13.0                        	
+flux-system   	flux-operator           	0.13.0  	False    	True 	Helm upgrade succeeded for release flux-system/flux-operator.v2 with chart flux-operator@0.13.0                        	
+kube-system   	cilium                  	1.16.5  	False    	True 	Helm upgrade succeeded for release kube-system/cilium.v2 with chart cilium@1.16.5                                      	
+kube-system   	coredns                 	1.37.1  	False    	True 	Helm upgrade succeeded for release kube-system/coredns.v2 with chart coredns@1.37.1                                    	
+kube-system   	metrics-server          	3.12.2  	False    	True 	Helm install succeeded for release kube-system/metrics-server.v1 with chart metrics-server@3.12.2                      	
+kube-system   	reloader                	1.2.1   	False    	True 	Helm install succeeded for release kube-system/reloader.v1 with chart reloader@1.2.1                                   	
+kube-system   	spegel                  	v0.0.30 	False    	True 	Helm upgrade succeeded for release kube-system/spegel.v2 with chart spegel@v0.0.30                                     	
+network       	cloudflared             	3.6.1   	False    	False	Helm install failed for release network/cloudflared with chart app-template@3.6.1: context deadline exceeded           	
+network       	echo-server             	3.6.1   	False    	True 	Helm install succeeded for release network/echo-server.v1 with chart app-template@3.6.1                                	
+network       	external-dns            	1.15.0  	False    	True 	Helm install succeeded for release network/external-dns.v1 with chart external-dns@1.15.0                              	
+network       	ingress-nginx-external  	        	False    	False	dependency 'network/cloudflared' is not ready                                                                          	
+network       	ingress-nginx-internal  	4.12.0  	False    	True 	Helm install succeeded for release network/ingress-nginx-internal.v1 with chart ingress-nginx@4.12.0                   	
+network       	k8s-gateway             	2.4.0   	False    	True 	Helm install succeeded for release network/k8s-gateway.v1 with chart k8s-gateway@2.4.0                                 	
+observability 	prometheus-operator-crds	17.0.2  	False    	True 	Helm upgrade succeeded for release observability/prometheus-operator-crds.v2 with chart prometheus-operator-crds@17.0.2	
+openebs-system	openebs                 	4.1.2   	False    	True 	Helm install succeeded for release openebs-system/openebs.v1 with chart openebs@4.1.2                                  	
