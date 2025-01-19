@@ -1,120 +1,212 @@
+# ---
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# apiVersion: helm.toolkit.fluxcd.io/v2
+# kind: HelmRelease
+# metadata:
+#   name: dashy
+# spec:
+#   interval: 15m
+#   chart:
+#     spec:
+#       chart: app-template
+#       version: 3.6.1
+#       sourceRef:
+#         kind: HelmRepository
+#         name: bjw-s-charts
+#         namespace: flux-system
+#       interval: 15m
+#   maxHistory: 3
+#   install:
+#     createNamespace: true
+#     remediation:
+#       retries: 3
+#   upgrade:
+#     cleanupOnFail: true
+#     remediation:
+#       retries: 3
+#   uninstall:
+#     keepHistory: false
+#   values:
+#     controllers:
+#       main:
+#         annotations:
+#           reloader.stakater.com/auto: "true"
+#         containers:
+#           main:
+#             image:
+#               repository: ghcr.io/lissy93/dashy
+#               tag: 3.1.0@sha256:e0e4d344f9be6d6f0061bb4f5368efd5034e8f2cec886d8afefc89a76be830d4
+#             env:
+#               TZ: America/Toronto
+#               UID: ${APP_UID}
+#               GID: ${APP_GID}
+#           code-server:
+#             image:
+#               repository: codercom/code-server
+#               tag: 4.96.2@sha256:6b8c0e944caec80057e71d2c2f352cee38fe00ae4b7515fc4458eb300844f699
+#             securityContext:
+#               runAsUser: 0
+#             args:
+#               [
+#                 "--auth",
+#                 "none",
+#                 "--disable-telemetry",
+#                 "--disable-update-check",
+#                 "--user-data-dir",
+#                 "/tmp/.vscode",
+#                 "--extensions-dir",
+#                 "/tmp/.vs1ode",
+#                 "--port",
+#                 "8081",
+#                 "/config"
+#               ]
+#     service:
+#       main:
+#         controller: main
+#         ports:
+#           http:
+#             port: 8080
+#       code-server:
+#         controller: main
+#         ports:
+#           http:
+#             port: 8081
+#     ingress:
+#       main:
+#         enabled: true
+#         className: internal-nginx
+#         hosts:
+#           - host: "{{ .Release.Name }}.zinn.ca"
+#             paths:
+#               - path: /
+#                 service:
+#                   identifier: main
+#                   port: http
+#       code-server:
+#         enabled: true
+#         className: internal-nginx
+#         hosts:
+#           - host: "dashy-code.zinn.ca"
+#             paths:
+#               - path: /
+#                 service:
+#                   identifier: code-server
+#                   port: http
+#     persistence:
+#       config:
+#         enabled: true
+#         existingClaim: "${VOLSYNC_CLAIM}"
+#         advancedMounts:
+#           main:
+#             main:
+#               - path: /app/user-data
+#             code-server:
+#               - path: /config
+#       icons:
+#         enabled: true
+#         type: configMap
+#         name: dashy-icons
+#         advancedMounts:
+#           main:
+#             main:
+#               - path: /app/user-data/item-icons
+#                 readOnly: true
+#       temp:
+#         enabled: true
+#         type: emptyDir
+#         advancedMounts:
+#           main:
+#             code-server:
+#               - path: /tmp/.vscode
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: dashy
+  name: echo-server
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
       version: 3.6.1
       sourceRef:
         kind: HelmRepository
-        name: bjw-s-charts
+        name: bjw-s
         namespace: flux-system
-      interval: 15m
-  maxHistory: 3
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     controllers:
-      main:
-        annotations:
-          reloader.stakater.com/auto: "true"
+      echo-server:
+        strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
-              repository: ghcr.io/lissy93/dashy
-              tag: 3.1.0@sha256:e0e4d344f9be6d6f0061bb4f5368efd5034e8f2cec886d8afefc89a76be830d4
+              repository: ghcr.io/mendhak/http-https-echo
+              tag: 35
             env:
-              TZ: America/Toronto
-              UID: ${APP_UID}
-              GID: ${APP_GID}
-          code-server:
-            image:
-              repository: codercom/code-server
-              tag: 4.96.2@sha256:6b8c0e944caec80057e71d2c2f352cee38fe00ae4b7515fc4458eb300844f699
+              HTTP_PORT: &port 8080
+              LOG_WITHOUT_NEWLINE: true
+              LOG_IGNORE_PATH: /healthz
+              PROMETHEUS_ENABLED: true
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             securityContext:
-              runAsUser: 0
-            args:
-              [
-                "--auth",
-                "none",
-                "--disable-telemetry",
-                "--disable-update-check",
-                "--user-data-dir",
-                "/tmp/.vscode",
-                "--extensions-dir",
-                "/tmp/.vs1ode",
-                "--port",
-                "8081",
-                "/config"
-              ]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 64Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
     service:
-      main:
-        controller: main
+      app:
+        controller: echo-server
         ports:
           http:
-            port: 8080
-      code-server:
-        controller: main
-        ports:
-          http:
-            port: 8081
+            port: *port
+    serviceMonitor:
+      app:
+        serviceName: echo-server
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
     ingress:
-      main:
-        enabled: true
-        className: internal-nginx
+      app:
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
-          - host: "{{ .Release.Name }}.zinn.ca"
+          - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
-      code-server:
-        enabled: true
-        className: internal-nginx
-        hosts:
-          - host: "dashy-code.zinn.ca"
-            paths:
-              - path: /
-                service:
-                  identifier: code-server
-                  port: http
-    persistence:
-      config:
-        enabled: true
-        existingClaim: "${VOLSYNC_CLAIM}"
-        advancedMounts:
-          main:
-            main:
-              - path: /app/user-data
-            code-server:
-              - path: /config
-      icons:
-        enabled: true
-        type: configMap
-        name: dashy-icons
-        advancedMounts:
-          main:
-            main:
-              - path: /app/user-data/item-icons
-                readOnly: true
-      temp:
-        enabled: true
-        type: emptyDir
-        advancedMounts:
-          main:
-            code-server:
-              - path: /tmp/.vscode
