@@ -1,0 +1,102 @@
+# media/calibre-web/app/helmrelease.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: calibre-web
+  labels:
+    app.kubernetes.io/name: calibre-web
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.6.1
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  interval: 30m
+
+  values:
+    controllers:
+      calibre-web:
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            runAsNonRoot: true
+            fsGroupChangePolicy: "OnRootMismatch"
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bjw-s-labs/calibre-web
+              tag: 0.6.24@sha256:130247a83b18307621967b9d4464a15cbf99970fdd1bedddaa0d4087f4e3b269
+
+            env:
+              TZ: "UTC"
+              CACHE_DIR: "/cache"
+              CALIBRE_DBPATH: "/config"
+              SETUP_MODE: "true"
+
+            probes:
+              liveness:
+                enabled: true
+                spec:
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+              readiness:
+                enabled: true
+                spec:
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                cpu: 200m
+                memory: 512Mi
+
+    service:
+      app:
+        controller: calibre-web
+        ports:
+          http:
+            port: 8083
+
+    ingress:
+      app:
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        hosts:
+          - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+
+    persistence:
+      config:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 5Gi
+        storageClass: "openebs-hostpath"
+        advancedMounts:
+          calibre-web:
+            app:
+              - path: /config
+
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /cache

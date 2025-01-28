@@ -1,0 +1,117 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: linkstack
+  namespace: services
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: linkstack
+      version: 0.2.2
+      sourceRef:
+        kind: HelmRepository
+        name: linkstack
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      linkstack:
+        strategy: RollingUpdate
+        containers:
+          linkstack:
+            image:
+              registry: ghcr.io/linkstackorg/linkstack
+              repository: linkstackorg/linkstack
+              tag: latest
+              pullPolicy: IfNotPresent
+            # env:
+              # SERVER_ADMIN: "admin@example.com"
+              # SERVER_NAME: "linkstack.local"
+              # LOG_LEVEL: "info"
+              # TIMEZONE: "UTC"
+              # PHP_MEMORY_LIMIT: "256M"
+              # UPLOAD_MAX_FILESIZE: "8M"
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 80
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 80
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+
+    linkstack:
+      data:
+        pvc:
+          existingClaim: linkstack-pvc
+
+    service:
+      linkstack:
+        controller: linkstack
+        ports:
+          http:
+            port: 80
+
+    ingress:
+      enabled: true
+      className: external
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+      extraHosts:
+        - host: "www.${SECRET_DOMAIN}"
+          paths:
+            - path: /
+              service:
+                identifier: linkstack
+                port: http
+
+    serviceMonitor:
+      linkstack:
+        serviceName: linkstack
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
